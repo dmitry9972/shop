@@ -139,6 +139,19 @@ class Order(models.Model):
 
     order_date = models.DateTimeField(default=datetime.now)
 
+    PROCESSING_ORDER = 1
+    SHIPPED = 2
+    DELIVERED = 3
+    STATUS_CHOICES = (
+        (PROCESSING_ORDER, ('We got your order!')),
+        (SHIPPED, ('We have packaged your items and have handed your package to our trusted carriers. ')),
+        (DELIVERED, ('Delivered')),
+    )
+
+
+    status = models.PositiveSmallIntegerField( choices=STATUS_CHOICES,  default=PROCESSING_ORDER,
+                            verbose_name='Статус')
+
     def __str__(self):
         return 'Номер заказа: %s' % (self.id)
 
