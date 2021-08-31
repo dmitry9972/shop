@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
 from django.utils.html import mark_safe
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class AdvUser(AbstractUser):
@@ -230,3 +234,8 @@ class Discount_brand(models.Model):
         verbose_name_plural = 'Скидки на продукт по брэнду'
         verbose_name = 'Скидка на продукт по брэнду'
         ordering = ['brand']
+
+@receiver(post_save, sender = settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

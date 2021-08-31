@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import products
-from .views import ProductsDetailView, \
+from .views import registration_view, ProductsDetailView, \
     ProductsCreateView, BrandsCreateView, CountryCreateView, PhotoCreateView, CategoryCreateView, \
     OrderCreateView, ProductsetCreateView, DiscountCreateView, Discount_pediodCreateView,\
     Discount_brandCreateView
@@ -8,7 +8,11 @@ from .views import brands, BrandsDetailView, country, CountryDetailView, photo, 
     category, CategoryDetailView, order, OrderDetailView, productset, ProductsetDetailView, discount, \
     DiscountDetailView, discount_pediod, Discount_pediodDetailView, discount_brand, Discount_brandDetailView
 
+from rest_framework.authtoken.views import obtain_auth_token
+
 urlpatterns = [
+    path('register/', registration_view, name='register'),
+    path('login/', obtain_auth_token, name='login'),
     path('products/<int:pk>/', ProductsDetailView.as_view()),
     path('products/', products),
     path('products/create/', ProductsCreateView.as_view()),
