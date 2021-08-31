@@ -7,7 +7,7 @@ from django.utils.html import mark_safe
 
 
 class AdvUserAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'is_activated', 'date_joined')
+    list_display = ('__str__', 'is_activated', 'date_joined', 'is_staff')
     search_fields = ('username', 'email', 'first_name', 'last_name')
     fields = (('username', 'email'), ('first_name', 'last_name'),
               ( 'is_active', 'is_activated'),

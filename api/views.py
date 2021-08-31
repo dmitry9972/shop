@@ -1,7 +1,7 @@
 from rest_framework import status
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from main.models import Product, Brand, \
     Country, Photo, Category, \
     Order, Productset, Discount, Discount_pediod, Discount_brand
@@ -18,6 +18,10 @@ from .serializers import BrandSerializer, BrandDetailSerializer, \
     Discount_brandSerializer, Discount_brandDetailSerializer
 from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.authentication import TokenAuthentication
+
+
 
 @api_view(['POST'])
 def registration_view(request):
@@ -48,7 +52,8 @@ class ProductsDetailView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
 
-
+@permission_classes((IsAuthenticated,))
+@authentication_classes([TokenAuthentication, IsAdminUser ])
 class ProductsCreateView(CreateAPIView):
     serializer_class = ProductDetailSerializer
 
@@ -66,6 +71,8 @@ class BrandsDetailView(RetrieveAPIView):
     serializer_class = BrandDetailSerializer
 
 
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class BrandsCreateView(CreateAPIView):
     serializer_class = BrandDetailSerializer
 
@@ -82,7 +89,8 @@ class CountryDetailView(RetrieveAPIView):
     queryset = Country.objects.all()
     serializer_class = CountryDetailSerializer
 
-
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class CountryCreateView(CreateAPIView):
     serializer_class = CountryDetailSerializer
 
@@ -99,6 +107,8 @@ class PhotoDetailView(RetrieveAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoDetailSerializer
 
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class PhotoCreateView(CreateAPIView):
     serializer_class = PhotoDetailSerializer
 
@@ -115,6 +125,8 @@ class CategoryDetailView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
 
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class CategoryCreateView(CreateAPIView):
     serializer_class = CategoryDetailSerializer
 
@@ -131,6 +143,8 @@ class OrderDetailView(RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderDetailSerializer
 
+@permission_classes((IsAuthenticated,))
+@authentication_classes([TokenAuthentication, ])
 class OrderCreateView(CreateAPIView):
     serializer_class = OrderDetailSerializer
 
@@ -148,6 +162,9 @@ class ProductsetDetailView(RetrieveAPIView):
     queryset = Productset.objects.all()
     serializer_class = ProductsetDetailSerializer
 
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([TokenAuthentication, ])
 class ProductsetCreateView(CreateAPIView):
     serializer_class = ProductsetDetailSerializer
 
@@ -165,7 +182,8 @@ class DiscountDetailView(RetrieveAPIView):
     serializer_class = DiscountDetailSerializer
 
 
-
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class DiscountCreateView(CreateAPIView):
     serializer_class = DiscountDetailSerializer
 
@@ -183,7 +201,8 @@ class Discount_pediodDetailView(RetrieveAPIView):
     serializer_class = Discount_pediodDetailSerializer
 
 
-
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class Discount_pediodCreateView(CreateAPIView):
     serializer_class = Discount_pediodDetailSerializer
 
@@ -199,6 +218,8 @@ class Discount_brandDetailView(RetrieveAPIView):
     queryset = Discount_brand.objects.all()
     serializer_class = Discount_brandDetailSerializer
 
+@permission_classes((IsAuthenticated, IsAdminUser))
+@authentication_classes([TokenAuthentication,  ])
 class Discount_brandCreateView(CreateAPIView):
     serializer_class = Discount_brandDetailSerializer
 
