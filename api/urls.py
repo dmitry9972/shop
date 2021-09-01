@@ -11,7 +11,7 @@ from .views import brands, BrandsDetailView, country, CountryDetailView, photo, 
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
-    path('register/', registration_view, name='register'),
+    path('register/', registration_view.as_view(), name='register'),
     path('login/', obtain_auth_token, name='login'),
     path('products/<int:pk>/', ProductsDetailView.as_view()),
     path('products/', products.as_view()),

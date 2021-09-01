@@ -20,12 +20,12 @@ from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.views import APIView
 
 
 
-@api_view(['POST'])
-def registration_view(request):
-    if request.method == 'POST':
+class registration_view(APIView):
+    def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
         data={}
         if serializer.is_valid():
@@ -38,6 +38,27 @@ def registration_view(request):
         else:
             data = serializer.errors
         return Response(data)
+
+
+
+
+
+# @api_view(['POST'])
+# def registration_view(request):
+#     if request.method == 'POST':
+#         serializer = RegistrationSerializer(data=request.data)
+#         data={}
+#         if serializer.is_valid():
+#             account = serializer.save()
+#             data['response']= "succesfully registered a new user"
+#             data['email'] = account.email
+#             data['username'] = account.username
+#             token = Token.objects.get(user=account).key
+#             data['token']=token
+#         else:
+#             data = serializer.errors
+#         return Response(data)
+
 
 
 # @api_view(['GET'])
