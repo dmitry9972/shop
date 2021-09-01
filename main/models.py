@@ -4,10 +4,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
 from django.utils.html import mark_safe
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-
+from tasks import add, transfer_to_warehouse
 
 class AdvUser(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True,
@@ -239,3 +239,61 @@ class Discount_brand(models.Model):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(m2m_changed, sender = Order.productset.through)
+def push_order_to_celery(sender, instance, action, **kwargs):
+    order = instance
+    if action == "post_add":
+        transfer_data = {}
+        transfer_data['order_pk'] = order.pk
+        transfer_data['order_date'] = order.order_date
+        transfer_data['order_productsets'] = {}
+
+        for m in order.productset.all():
+            x = m.pk
+            transfer_data['order_productsets'][x] = {}
+            transfer_data['order_productsets'][x]['username'] = m.advuser.username
+            transfer_data['order_productsets'][x]['product_name'] = m.product.name
+            transfer_data['order_productsets'][x]['product_count'] = m.product_count
+        print(transfer_data)
+
+        transfer_to_warehouse.delay(transfer_data)
+
+
+# @receiver(post_save, sender = Order)
+# def push_order_to_celery(sender, instance=None, created=True, **kwargs):
+#     if created:
+#         print('hohohoho!!!')
+#         order = instance
+#         print(order.pk)
+#         print(order.order_date)
+#         print(order.productset)
+#         print(order.productset.all())
+#
+#         for m in order.productset.all():
+#             print('*')
+#             print(m.pk)
+#
+#         for m in Productset.objects.all():
+#             print('////')
+#             print(m.pk)
+#             print(m.order_set.all())
+#
+#         print('&&&&&&&&&')
+#         x = Productset.objects.filter(order__pk=order.pk)
+#         print(x)
+#         print('&&&&&&&&&')
+#
+#         test = Order.objects.get(pk=(order.pk-1))
+#         print(test.pk)
+#         print(test.order_date)
+#         print(test.productset)
+#         print(test.productset.all())
+#
+#         print('&&&&&&&&&')
+#         x = Productset.objects.filter(order__pk=(order.pk-1))
+#         print(x)
+#         print('&&&&&&&&&')
+#
+#         add.delay(4, 4)
