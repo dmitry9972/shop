@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from main.models import Product, Brand, \
     Country, Photo, Category, \
     Order, Productset, Discount, Discount_pediod, Discount_brand
-from rest_framework.generics import RetrieveAPIView, CreateAPIView
+from rest_framework.generics import RetrieveAPIView, CreateAPIView, ListAPIView
 from .serializers import ProductSerializer, ProductDetailSerializer
 from .serializers import BrandSerializer, BrandDetailSerializer, \
     CountrySerializer, CountryDetailSerializer, \
@@ -40,12 +40,17 @@ def registration_view(request):
         return Response(data)
 
 
-@api_view(['GET'])
-def products(request):
-    if request.method == 'GET':
-        products = Product.objects.all()[:10]
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+# @api_view(['GET'])
+# def products(request):
+#     if request.method == 'GET':
+#         products = Product.objects.all()[:10]
+#         serializer = ProductSerializer(products, many=True)
+#         return Response(serializer.data)
+
+
+class products(ListAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()[:10]
 
 
 class ProductsDetailView(RetrieveAPIView):
@@ -58,12 +63,11 @@ class ProductsCreateView(CreateAPIView):
     serializer_class = ProductDetailSerializer
 
 
-@api_view(['GET'])
-def brands(request):
-    if request.method == 'GET':
-        brands = Brand.objects.all()[:10]
-        serializer = BrandSerializer(brands, many=True)
-        return Response(serializer.data)
+
+class brands(ListAPIView):
+    serializer_class = BrandSerializer
+    queryset = Brand.objects.all()[:10]
+
 
 
 class BrandsDetailView(RetrieveAPIView):
@@ -77,12 +81,10 @@ class BrandsCreateView(CreateAPIView):
     serializer_class = BrandDetailSerializer
 
 
-@api_view(['GET'])
-def country(request):
-    if request.method == 'GET':
-        country = Country.objects.all()[:10]
-        serializer = CountrySerializer(country, many=True)
-        return Response(serializer.data)
+
+class country(ListAPIView):
+    serializer_class = CountrySerializer
+    queryset = Country.objects.all()[:10]
 
 
 class CountryDetailView(RetrieveAPIView):
@@ -95,12 +97,12 @@ class CountryCreateView(CreateAPIView):
     serializer_class = CountryDetailSerializer
 
 
-@api_view(['GET'])
-def photo(request):
-    if request.method == 'GET':
-        photo = Photo.objects.all()[:10]
-        serializer = PhotoSerializer(photo, many=True)
-        return Response(serializer.data)
+
+
+class photo(ListAPIView):
+    serializer_class = PhotoSerializer
+    queryset = Photo.objects.all()[:10]
+
 
 
 class PhotoDetailView(RetrieveAPIView):
@@ -113,12 +115,13 @@ class PhotoCreateView(CreateAPIView):
     serializer_class = PhotoDetailSerializer
 
 
-@api_view(['GET'])
-def category(request):
-    if request.method == 'GET':
-        category = Category.objects.all()[:10]
-        serializer = CategorySerializer(category, many=True)
-        return Response(serializer.data)
+
+
+class category(ListAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()[:10]
+
+
 
 
 class CategoryDetailView(RetrieveAPIView):
@@ -131,12 +134,11 @@ class CategoryCreateView(CreateAPIView):
     serializer_class = CategoryDetailSerializer
 
 
-@api_view(['GET'])
-def order(request):
-    if request.method == 'GET':
-        order = Order.objects.all()[:10]
-        serializer = OrderSerializer(order, many=True)
-        return Response(serializer.data)
+
+class order(ListAPIView):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()[:10]
+
 
 
 class OrderDetailView(RetrieveAPIView):
@@ -150,12 +152,11 @@ class OrderCreateView(CreateAPIView):
 
 
 
-@api_view(['GET'])
-def productset(request):
-    if request.method == 'GET':
-        productset = Productset.objects.all()[:10]
-        serializer = ProductsetSerializer(productset, many=True)
-        return Response(serializer.data)
+
+class productset(ListAPIView):
+    serializer_class = ProductsetSerializer
+    queryset = Productset.objects.all()[:10]
+
 
 
 class ProductsetDetailView(RetrieveAPIView):
@@ -169,12 +170,10 @@ class ProductsetCreateView(CreateAPIView):
     serializer_class = ProductsetDetailSerializer
 
 
-@api_view(['GET'])
-def discount(request):
-    if request.method == 'GET':
-        discount = Discount.objects.all()[:10]
-        serializer = DiscountSerializer(discount, many=True)
-        return Response(serializer.data)
+
+class discount(ListAPIView):
+    serializer_class = DiscountSerializer
+    queryset = Discount.objects.all()[:10]
 
 
 class DiscountDetailView(RetrieveAPIView):
@@ -188,12 +187,11 @@ class DiscountCreateView(CreateAPIView):
     serializer_class = DiscountDetailSerializer
 
 
-@api_view(['GET'])
-def discount_pediod(request):
-    if request.method == 'GET':
-        discount_pediod = Discount_pediod.objects.all()[:10]
-        serializer = Discount_pediodSerializer(discount_pediod, many=True)
-        return Response(serializer.data)
+
+
+class discount_pediod(ListAPIView):
+    serializer_class = Discount_pediodSerializer
+    queryset = Discount_pediod.objects.all()[:10]
 
 
 class Discount_pediodDetailView(RetrieveAPIView):
@@ -206,12 +204,12 @@ class Discount_pediodDetailView(RetrieveAPIView):
 class Discount_pediodCreateView(CreateAPIView):
     serializer_class = Discount_pediodDetailSerializer
 
-@api_view(['GET'])
-def discount_brand(request):
-    if request.method == 'GET':
-        discount_brand = Discount_brand.objects.all()[:10]
-        serializer = Discount_brandSerializer(discount_brand, many=True)
-        return Response(serializer.data)
+
+
+class discount_brand(ListAPIView):
+    serializer_class = Discount_brandSerializer
+    queryset = Discount_brand.objects.all()[:10]
+
 
 
 class Discount_brandDetailView(RetrieveAPIView):
