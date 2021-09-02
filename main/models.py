@@ -246,6 +246,7 @@ def push_order_to_celery(sender, instance, action, **kwargs):
     order = instance
     if action == "post_add":
         transfer_data = {}
+        transfer_data['order_client'] = order.advuser.username
         transfer_data['order_pk'] = order.pk
         transfer_data['order_date'] = order.order_date
         transfer_data['order_productsets'] = {}
