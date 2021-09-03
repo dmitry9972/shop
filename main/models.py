@@ -156,6 +156,9 @@ class Order(models.Model):
     status = models.PositiveSmallIntegerField( choices=STATUS_CHOICES,  default=PROCESSING_ORDER,
                             verbose_name='Статус')
 
+    cdek_uuid = models.CharField(default='', max_length=100, db_index=True,
+                                 verbose_name='CDEK UUID')
+
     def __str__(self):
         return 'Номер заказа: %s' % (self.id)
 
@@ -262,39 +265,3 @@ def push_order_to_celery(sender, instance, action, **kwargs):
         transfer_to_warehouse.delay(transfer_data)
 
 
-# @receiver(post_save, sender = Order)
-# def push_order_to_celery(sender, instance=None, created=True, **kwargs):
-#     if created:
-#         print('hohohoho!!!')
-#         order = instance
-#         print(order.pk)
-#         print(order.order_date)
-#         print(order.productset)
-#         print(order.productset.all())
-#
-#         for m in order.productset.all():
-#             print('*')
-#             print(m.pk)
-#
-#         for m in Productset.objects.all():
-#             print('////')
-#             print(m.pk)
-#             print(m.order_set.all())
-#
-#         print('&&&&&&&&&')
-#         x = Productset.objects.filter(order__pk=order.pk)
-#         print(x)
-#         print('&&&&&&&&&')
-#
-#         test = Order.objects.get(pk=(order.pk-1))
-#         print(test.pk)
-#         print(test.order_date)
-#         print(test.productset)
-#         print(test.productset.all())
-#
-#         print('&&&&&&&&&')
-#         x = Productset.objects.filter(order__pk=(order.pk-1))
-#         print(x)
-#         print('&&&&&&&&&')
-#
-#         add.delay(4, 4)

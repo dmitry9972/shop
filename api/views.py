@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from main.models import Product, Brand, \
     Country, Photo, Category, \
     Order, Productset, Discount, Discount_pediod, Discount_brand
-from rest_framework.generics import RetrieveAPIView, CreateAPIView, ListAPIView
+from rest_framework.generics import RetrieveAPIView, CreateAPIView, ListAPIView, UpdateAPIView
 from .serializers import ProductSerializer, ProductDetailSerializer
 from .serializers import BrandSerializer, BrandDetailSerializer, \
     CountrySerializer, CountryDetailSerializer, \
@@ -172,6 +172,12 @@ class OrderCreateView(CreateAPIView):
     serializer_class = OrderDetailSerializer
 
 
+@permission_classes((IsAuthenticated,))
+@authentication_classes([TokenAuthentication, ])
+class OrderUpdateView(UpdateAPIView):
+    queryset = Order.objects.all()
+    lookup_field = 'pk'
+    serializer_class = OrderDetailSerializer
 
 
 class productset(ListAPIView):

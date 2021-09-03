@@ -4,7 +4,7 @@ from .views import registration_view, ProductsDetailView, \
     ProductsCreateView, BrandsCreateView, CountryCreateView, PhotoCreateView, CategoryCreateView, \
     OrderCreateView, ProductsetCreateView, DiscountCreateView, Discount_pediodCreateView,\
     Discount_brandCreateView
-from .views import brands, BrandsDetailView, country, CountryDetailView, photo, PhotoDetailView, \
+from .views import brands,OrderUpdateView, BrandsDetailView, country, CountryDetailView, photo, PhotoDetailView, \
     category, CategoryDetailView, order, OrderDetailView, productset, ProductsetDetailView, discount, \
     DiscountDetailView, discount_pediod, Discount_pediodDetailView, discount_brand, Discount_brandDetailView
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('order/<int:pk>/', OrderDetailView.as_view()),
     path('order/', order.as_view()),
     path('order/create/', OrderCreateView.as_view()),
+    path('order/update/<int:pk>/', OrderUpdateView.as_view()),
     path('productset/<int:pk>/', ProductsetDetailView.as_view()),
     path('productset/', productset.as_view()),
     path('productset/create/', ProductsetCreateView.as_view()),
