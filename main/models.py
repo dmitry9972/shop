@@ -7,7 +7,10 @@ from django.conf import settings
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from tasks import add, transfer_to_warehouse
+from tasks import transfer_to_warehouse
+import logging
+import main.const
+
 
 class AdvUser(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True,
@@ -24,9 +27,8 @@ class AdvUser(AbstractUser):
         verbose_name = 'Пользователь'
 
 
-
 class Product(models.Model):
-    name = models.CharField(default='' , max_length=100, db_index=True, unique=True,
+    name = models.CharField(default='', max_length=100, db_index=True, unique=True,
                             verbose_name='Наименование')
 
     description = models.CharField(max_length=10000, db_index=True, unique=False,
@@ -43,7 +45,6 @@ class Product(models.Model):
     country = models.ForeignKey('Country',
                                 on_delete=models.PROTECT, null=False, blank=False,
                                 verbose_name='Страна')
-
 
     price = models.FloatField(null=False, blank=False, default=0,
                               verbose_name='Цена')
@@ -83,36 +84,20 @@ class Country(models.Model):
         ordering = ['name']
 
 
-
-
-
-
-
 class Photo(models.Model):
-    image = models.ImageField(null=True, blank=True,)
+    image = models.ImageField(null=True, blank=True, )
     product = models.ForeignKey('Product', on_delete=models.PROTECT,
-                           related_name="images", default=1)
+                                related_name="images", default=1)
 
     def image_tag(self):
         return mark_safe('<img src="/%s" width="150" height="150" />'
                          % (self.image))
 
-
-
-
     image_tag.short_description = 'Image'
-
 
     class Meta:
         verbose_name_plural = 'Фотки'
         verbose_name = 'Фото'
-
-
-
-
-
-
-
 
 
 class Category(models.Model):
@@ -143,18 +128,8 @@ class Order(models.Model):
 
     order_date = models.DateTimeField(default=datetime.now)
 
-    PROCESSING_ORDER = 1
-    SHIPPED = 2
-    DELIVERED = 3
-    STATUS_CHOICES = (
-        (PROCESSING_ORDER, ('We got your order!')),
-        (SHIPPED, ('We have packaged your items and have handed your package to our trusted carriers. ')),
-        (DELIVERED, ('Delivered')),
-    )
-
-
-    status = models.PositiveSmallIntegerField( choices=STATUS_CHOICES,  default=PROCESSING_ORDER,
-                            verbose_name='Статус')
+    status = models.PositiveSmallIntegerField(choices=main.const.STATUS_CHOICES, default=main.const.PROCESSING_ORDER,
+                                              verbose_name='Статус')
 
     cdek_uuid = models.CharField(default='', max_length=100, db_index=True,
                                  verbose_name='CDEK UUID')
@@ -238,30 +213,8 @@ class Discount_brand(models.Model):
         verbose_name = 'Скидка на продукт по брэнду'
         ordering = ['brand']
 
-@receiver(post_save, sender = settings.AUTH_USER_MODEL)
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-@receiver(m2m_changed, sender = Order.productset.through)
-def push_order_to_celery(sender, instance, action, **kwargs):
-    order = instance
-    if action == "post_add":
-        transfer_data = {}
-        transfer_data['order_client'] = order.advuser.username
-        transfer_data['order_pk'] = order.pk
-        transfer_data['order_date'] = order.order_date
-        transfer_data['order_productsets'] = {}
-
-        for m in order.productset.all():
-            x = m.pk
-            transfer_data['order_productsets'][x] = {}
-            transfer_data['order_productsets'][x]['username'] = m.advuser.username
-            transfer_data['order_productsets'][x]['product_name'] = m.product.name
-            transfer_data['order_productsets'][x]['product_count'] = m.product_count
-        print(transfer_data)
-
-        transfer_to_warehouse.delay(transfer_data)
-
-
