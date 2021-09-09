@@ -8,6 +8,11 @@ from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from tasks import add, transfer_to_warehouse
+import logging
+
+
+
+
 
 class AdvUser(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True,
@@ -260,7 +265,12 @@ def push_order_to_celery(sender, instance, action, **kwargs):
             transfer_data['order_productsets'][x]['username'] = m.advuser.username
             transfer_data['order_productsets'][x]['product_name'] = m.product.name
             transfer_data['order_productsets'][x]['product_count'] = m.product_count
-        print(transfer_data)
+
+        if settings.DEBUG == True:
+            logger = logging.getLogger('django')
+            logger.warning('transfer_data:')
+            logger.warning(transfer_data)
+
 
         transfer_to_warehouse.delay(transfer_data)
 

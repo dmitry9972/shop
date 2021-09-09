@@ -10,8 +10,12 @@ def add(x, y):
 
 @app.task
 def transfer_to_warehouse( data_to_transfer ):
-    print('GOT DATA:')
-    print(data_to_transfer)
+
+
+    if settings.DEBUG == True:
+        logger = logging.getLogger('django')
+        logger.warning('GOT DATA:')
+        logger.warning(data_to_transfer)
 
 
 
@@ -22,15 +26,15 @@ def transfer_to_warehouse( data_to_transfer ):
                'order_client': data_to_transfer['order_client'],
               }
 
-    print('**********')
-    print(data_to_transfer['order_productsets'])
-    print(headers)
-    print(data_send)
-    print('**********')
+
 
     r = requests.post('http://0.0.0.0:5000/api/order/create/', data=data_send, headers=headers)
 
-    print(r.text)
 
+
+    if settings.DEBUG == True:
+        logger = logging.getLogger('django')
+        logger.warning('request text:')
+        logger.warning(r.text)
 
     return

@@ -41,34 +41,6 @@ class registration_view(APIView):
 
 
 
-
-
-# @api_view(['POST'])
-# def registration_view(request):
-#     if request.method == 'POST':
-#         serializer = RegistrationSerializer(data=request.data)
-#         data={}
-#         if serializer.is_valid():
-#             account = serializer.save()
-#             data['response']= "succesfully registered a new user"
-#             data['email'] = account.email
-#             data['username'] = account.username
-#             token = Token.objects.get(user=account).key
-#             data['token']=token
-#         else:
-#             data = serializer.errors
-#         return Response(data)
-
-
-
-# @api_view(['GET'])
-# def products(request):
-#     if request.method == 'GET':
-#         products = Product.objects.all()[:10]
-#         serializer = ProductSerializer(products, many=True)
-#         return Response(serializer.data)
-
-
 class products(ListAPIView):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()[:10]
