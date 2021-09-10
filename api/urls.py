@@ -1,12 +1,6 @@
 from django.urls import path
-from .views import products
-from .views import registration_view, ProductsDetailView, \
-    ProductsCreateView, BrandsCreateView, CountryCreateView, PhotoCreateView, CategoryCreateView, \
-    OrderCreateView, ProductsetCreateView, DiscountCreateView, Discount_pediodCreateView, \
-    Discount_brandCreateView
-from .views import brands, OrderUpdateView, BrandsDetailView, country, CountryDetailView, photo, PhotoDetailView, \
-    category, CategoryDetailView, order, OrderDetailView, productset, ProductsetDetailView, discount, \
-    DiscountDetailView, discount_pediod, Discount_pediodDetailView, discount_brand, Discount_brandDetailView
+
+from .views import registration_view
 
 from .views import ProductsViewSet, BrandsViewSet, CountryViewSet, PhotoViewSet, \
     Discount_brandViewSet, Discount_pediodViewSet, DiscountViewSet, ProductsetViewSet, \
@@ -52,6 +46,5 @@ router.register(r"discount", DiscountViewSet)
 router.register(r"productset", ProductsetViewSet)
 router.register(r"order", OrderViewSet)
 router.register(r"category", CategoryViewSet)
-
 
 urlpatterns += router.urls
