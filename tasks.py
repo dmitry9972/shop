@@ -1,7 +1,11 @@
 from celery import Celery
 import requests
 import json
+import os
+from django.conf import settings
+import logging
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shop.settings")
 app = Celery('tasks', broker='redis://localhost:6379/0')
 
 @app.task

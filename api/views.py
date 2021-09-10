@@ -22,6 +22,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 
+from rest_framework import viewsets
+
 
 
 class registration_view(APIView):
@@ -57,6 +59,13 @@ class ProductsCreateView(CreateAPIView):
 
 
 
+class ProductsViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+
+
+
+
 class brands(ListAPIView):
     serializer_class = BrandSerializer
     queryset = Brand.objects.all()[:10]
@@ -72,6 +81,11 @@ class BrandsDetailView(RetrieveAPIView):
 @authentication_classes([TokenAuthentication,  ])
 class BrandsCreateView(CreateAPIView):
     serializer_class = BrandDetailSerializer
+
+class BrandsViewSet(viewsets.ModelViewSet):
+    serializer_class = BrandSerializer
+    queryset = Brand.objects.all()
+
 
 
 
@@ -90,6 +104,11 @@ class CountryCreateView(CreateAPIView):
     serializer_class = CountryDetailSerializer
 
 
+class CountryViewSet(viewsets.ModelViewSet):
+    serializer_class = CountrySerializer
+    queryset = Country.objects.all()
+
+
 
 
 class photo(ListAPIView):
@@ -106,6 +125,10 @@ class PhotoDetailView(RetrieveAPIView):
 @authentication_classes([TokenAuthentication,  ])
 class PhotoCreateView(CreateAPIView):
     serializer_class = PhotoDetailSerializer
+
+class PhotoViewSet(viewsets.ModelViewSet):
+    serializer_class = PhotoSerializer
+    queryset = Photo.objects.all()
 
 
 
@@ -127,6 +150,11 @@ class CategoryCreateView(CreateAPIView):
     serializer_class = CategoryDetailSerializer
 
 
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
 
 class order(ListAPIView):
     serializer_class = OrderSerializer
@@ -144,12 +172,21 @@ class OrderCreateView(CreateAPIView):
     serializer_class = OrderDetailSerializer
 
 
+
+
+
 @permission_classes((IsAuthenticated,))
 @authentication_classes([TokenAuthentication, ])
 class OrderUpdateView(UpdateAPIView):
     queryset = Order.objects.all()
     lookup_field = 'pk'
     serializer_class = OrderDetailSerializer
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+
 
 
 class productset(ListAPIView):
@@ -168,6 +205,9 @@ class ProductsetDetailView(RetrieveAPIView):
 class ProductsetCreateView(CreateAPIView):
     serializer_class = ProductsetDetailSerializer
 
+class ProductsetViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductsetSerializer
+    queryset = Productset.objects.all()
 
 
 class discount(ListAPIView):
@@ -185,7 +225,9 @@ class DiscountDetailView(RetrieveAPIView):
 class DiscountCreateView(CreateAPIView):
     serializer_class = DiscountDetailSerializer
 
-
+class DiscountViewSet(viewsets.ModelViewSet):
+    serializer_class = DiscountSerializer
+    queryset = Discount.objects.all()
 
 
 class discount_pediod(ListAPIView):
@@ -203,7 +245,9 @@ class Discount_pediodDetailView(RetrieveAPIView):
 class Discount_pediodCreateView(CreateAPIView):
     serializer_class = Discount_pediodDetailSerializer
 
-
+class Discount_pediodViewSet(viewsets.ModelViewSet):
+    serializer_class = Discount_pediodSerializer
+    queryset = Discount_pediod.objects.all()
 
 class discount_brand(ListAPIView):
     serializer_class = Discount_brandSerializer
@@ -220,3 +264,6 @@ class Discount_brandDetailView(RetrieveAPIView):
 class Discount_brandCreateView(CreateAPIView):
     serializer_class = Discount_brandDetailSerializer
 
+class Discount_brandViewSet(viewsets.ModelViewSet):
+    serializer_class = Discount_brandSerializer
+    queryset = Discount_brand.objects.all()
