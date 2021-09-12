@@ -6,7 +6,11 @@ from django.conf import settings
 import logging
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shop.settings")
-app = Celery('tasks', broker='redis://localhost:6379/0')
+app = Celery('tasks', broker=settings.SHOP_CELERY_BROKER)
+
+
+
+# settings.WAREHOUSE_URL = 'http://0.0.0.0:5000/api/order/create/'
 
 @app.task
 def add(x, y):
@@ -23,7 +27,7 @@ def transfer_to_warehouse( data_to_transfer ):
 
 
 
-    headers = {'Authorization': 'Token 612a78cc5ed5aea70121d460d0c153d16cab20e3'}
+    headers = {'Authorization': settings.WAREHOUSE_USER_TOKEN}
     data_send = {'order_info': json.dumps(data_to_transfer['order_productsets'],ensure_ascii=False).encode('utf8'),
                'order_date': data_to_transfer['order_date'],
                'order_number': data_to_transfer['order_pk'],
@@ -32,7 +36,7 @@ def transfer_to_warehouse( data_to_transfer ):
 
 
 
-    r = requests.post('http://0.0.0.0:5000/api/order/create/', data=data_send, headers=headers)
+    r = requests.post(settings.WAREHOUSE_URL, data=data_send, headers=headers)
 
 
 
