@@ -243,9 +243,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-@receiver(m2m_changed, sender = Order.productset.through)
-def push_order_to_celery(sender, instance, action, **kwargs):
-    order = instance
+# @receiver(m2m_changed, sender = Order.productset.through)
+# def push_order_to_celery(sender, instance, action, **kwargs):
+#     order = instance
     # if action == "post_add":
     #     transfer_data = {}
     #     transfer_data['order_client'] = order.advuser.username
