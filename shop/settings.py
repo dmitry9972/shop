@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'colorlog',
+    'django_celery_beat',
 
 ]
 
@@ -198,5 +199,6 @@ LOGGING = {
     }
 }
 
-
+CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
+timezone = 'Europe/London'
 from .settings_local import *

@@ -7,8 +7,9 @@ from django.conf import settings
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from tasks import add, transfer_to_warehouse
+from tasks import transfer_to_warehouse
 import logging
+import main.const
 
 
 
@@ -148,17 +149,10 @@ class Order(models.Model):
 
     order_date = models.DateTimeField(default=datetime.now)
 
-    PROCESSING_ORDER = 1
-    SHIPPED = 2
-    DELIVERED = 3
-    STATUS_CHOICES = (
-        (PROCESSING_ORDER, ('We got your order!')),
-        (SHIPPED, ('We have packaged your items and have handed your package to our trusted carriers. ')),
-        (DELIVERED, ('Delivered')),
-    )
 
 
-    status = models.PositiveSmallIntegerField( choices=STATUS_CHOICES,  default=PROCESSING_ORDER,
+
+    status = models.PositiveSmallIntegerField( choices=main.const.STATUS_CHOICES,  default=main.const.PROCESSING_ORDER,
                             verbose_name='Статус')
 
     cdek_uuid = models.CharField(default='', max_length=100, db_index=True,
@@ -252,26 +246,26 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 @receiver(m2m_changed, sender = Order.productset.through)
 def push_order_to_celery(sender, instance, action, **kwargs):
     order = instance
-    if action == "post_add":
-        transfer_data = {}
-        transfer_data['order_client'] = order.advuser.username
-        transfer_data['order_pk'] = order.pk
-        transfer_data['order_date'] = order.order_date
-        transfer_data['order_productsets'] = {}
+    # if action == "post_add":
+    #     transfer_data = {}
+    #     transfer_data['order_client'] = order.advuser.username
+    #     transfer_data['order_pk'] = order.pk
+    #     transfer_data['order_date'] = order.order_date
+    #     transfer_data['order_productsets'] = {}
+    #
+    #     for m in order.productset.all():
+    #         x = m.pk
+    #         transfer_data['order_productsets'][x] = {}
+    #         transfer_data['order_productsets'][x]['username'] = m.advuser.username
+    #         transfer_data['order_productsets'][x]['product_name'] = m.product.name
+    #         transfer_data['order_productsets'][x]['product_count'] = m.product_count
+    #
+    #     if settings.DEBUG == True:
+    #         logger = logging.getLogger('django')
+    #         logger.warning('transfer_data:')
+    #         logger.warning(transfer_data)
 
-        for m in order.productset.all():
-            x = m.pk
-            transfer_data['order_productsets'][x] = {}
-            transfer_data['order_productsets'][x]['username'] = m.advuser.username
-            transfer_data['order_productsets'][x]['product_name'] = m.product.name
-            transfer_data['order_productsets'][x]['product_count'] = m.product_count
 
-        if settings.DEBUG == True:
-            logger = logging.getLogger('django')
-            logger.warning('transfer_data:')
-            logger.warning(transfer_data)
-
-
-        transfer_to_warehouse.delay(transfer_data)
+        # transfer_to_warehouse.delay(transfer_data)
 
 
