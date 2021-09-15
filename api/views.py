@@ -24,6 +24,8 @@ class ShopViewSet(viewsets.ModelViewSet):
 
 
 class registration_view(APIView):
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
         data = {}

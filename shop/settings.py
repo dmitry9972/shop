@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'colorlog',
     'django_celery_beat',
+    'django_extensions',
 
 ]
 
