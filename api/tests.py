@@ -11,6 +11,9 @@ import tasks
 from django.db.models import Max
 import json
 import datetime
+from unittest.mock import patch, Mock
+from unittest.mock import MagicMock
+import requests
 
 
 class ApiTestCase(APITestCase):
@@ -196,3 +199,16 @@ class ApiTestCase(APITestCase):
 
         result_json = json.dumps(result_dict)
         self.assertEqual( correct_json, result_json)
+
+
+    def test_transfer_to_warehouse(self):
+        self.test_order()
+        orders = Order.objects.all()
+        max = orders.aggregate(Max('pk'))
+        result_dict = tasks.prepare_data_for_warehouse(max['pk__max'])
+        requests.post = MagicMock()
+        tasks.transfer_to_warehouse(result_dict, max['pk__max'])
+        self.assertEqual(requests.post.called, True)
+
+
+
