@@ -15,10 +15,6 @@ from unittest.mock import patch, Mock
 from unittest.mock import MagicMock
 import requests
 
-from unittest.mock import patch, Mock
-from unittest.mock import MagicMock
-import requests
-
 
 
 
@@ -205,9 +201,6 @@ class ApiTestCase(APITestCase):
 
         result_json = json.dumps(result_dict)
         self.assertEqual( correct_json, result_json)
-<<<<<<< HEAD
->>>>>>> 2e6c94e... 45% test done
-=======
 
 
     def test_transfer_to_warehouse(self):
@@ -218,7 +211,8 @@ class ApiTestCase(APITestCase):
         requests.post = MagicMock()
         tasks.transfer_to_warehouse(result_dict, max['pk__max'])
         self.assertEqual(requests.post.called, True)
+        
+        
+        
 
 
-
->>>>>>> c93912b... made all tests for shop
