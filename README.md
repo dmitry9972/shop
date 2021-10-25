@@ -20,7 +20,7 @@ Features:
 1)Token-authentication
 2)Swagger
 3)Celery-redis periodic tasks
-4)Separate project-settings (git-ignored) + settings.example
+4)environment project settings
 5)Custom permision classes (/api/permissions.py)
 6)Router urls.
 7)Tests (api/tests.py)
