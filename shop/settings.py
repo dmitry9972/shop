@@ -200,6 +200,33 @@ LOGGING = {
     }
 }
 
+
 CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
 timezone = 'Europe/London'
-from .settings_local import *
+
+
+
+
+
+
+
+# SHOP_SECRET_KEY
+SECRET_KEY = os.environ['SECRET_KEY']
+# SHOP_DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django_db',
+        'USER': os.environ['USER'],
+        'PASSWORD': os.environ['PASSWORD'],
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+
+SHOP_CELERY_BROKER = os.environ['SHOP_CELERY_BROKER']
+
+WAREHOUSE_USER_TOKEN =  os.environ['WAREHOUSE_USER_TOKEN']
+
+WAREHOUSE_URL =  os.environ['WAREHOUSE_URL']
+
