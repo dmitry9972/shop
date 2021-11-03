@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db_shop:
+    image: postgres:12.8
+    restart: always
+    environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+    ports:
+          - '5432:5432'
+    volumes: 
+          - ./postgres-data:/var/lib/postgresql/data
+          # copy the sql script to create tables
+          - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  redis_shop:
+    image: "redis:alpine"
+    ports:
+          - '6379:6379'
